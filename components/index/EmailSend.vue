@@ -47,8 +47,8 @@
           })
           .then(
             () => {
-              console.log('SUCCESS!');
-              alert('Success')
+              console.log('SOS MESSEGE SEND SUCCESSFULLY. Help will arrive soon!');
+              alert('SOS MESSEGE SEND SUCCESSFULLY. Help will arrive soon!')
             },
             (error) => {
               alert('Failed')

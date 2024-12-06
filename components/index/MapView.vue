@@ -6,6 +6,8 @@ import { db } from '../../components/config/firestore.js'
 import { collection, getDocs } from "firebase/firestore";
 import emailjs from '@emailjs/browser';
 const apiKey = 'AIzaSyDM_zbLEpF8w2xOdMQzoGfKM-GavUXuhl4'
+const route = useRoute()
+const router = useRouter()
 
 const bangladesh = { lat: 23.6850, lng: 90.3563 }
 const mapRef = ref(null)
@@ -122,33 +124,7 @@ watch(
 
     console.log('location', location)
     localState.crimeLocation = location
-//     heatmapData = [{ location: { lat: 23.795779, lng: 90.349285 }, weight: 2 }, // Mohammadpur
-//   { lat: 23.734007, lng: 90.392847 }, // Paltan
-//   { location: { lat: 23.726221, lng: 90.417049 }, weight: 0.5 }, // Shahbagh
-//   { location: { lat: 23.768557, lng: 90.428833 }, weight: 3 }, // Banani
-//   { location: { lat: 23.709921, lng: 90.407143 }, weight: 2 }, // Lalbagh
-//   { lat: 23.738264, lng: 90.409040 }, // New Market
-//   { location: { lat: 23.746466, lng: 90.376015 }, weight: 0.5 }, // Ramna
-//   { lat: 23.814169, lng: 90.427619 }, // Baridhara
-//   { location: { lat: 23.868722, lng: 90.400787 }, weight: 2 }, // Uttara
-//   { location: { lat: 23.774015, lng: 90.365131 }, weight: 3 }, // Mirpur
-//   { location: { lat: 23.721920, lng: 90.431192 }, weight: 2 }, // Old Dhaka
-//   { lat: 23.820263, lng: 90.355871 }, // Pallabi
-//   { location: { lat: 23.781640, lng: 90.428217 }, weight: 0.5 }, // Niketon
-//   { location: { lat: 23.745928, lng: 90.392677 }, weight: 1 }, // Katabon
-//   { lat: 23.766199, lng: 90.422936 }, // Mohakhali
-//   { location: { lat: 23.737931, lng: 90.402926 }, weight: 3 }, // Segunbagicha
-//   { location: { lat: 23.754439, lng: 90.376589 }, weight: 1 }, // Shahbagh National Museum
-//   { location: { lat: 23.731830, lng: 90.402455 }, weight: 1.5 }, // Elephant Road
-//   { location: { lat: 23.800678, lng: 90.355345 }, weight: 2 }, // Kalyanpur
-//   { lat: 23.747210, lng: 90.394865 }, // Science Lab
-//   { location: { lat: 23.762762, lng: 90.431072 }, weight: 0.5 }, // Tejgaon
-//   { lat: 23.744839, lng: 90.395064 }, // Panthapath
-//   { location: { lat: 23.816790, lng: 90.430091 }, weight: 2 }, // Pragati Sarani
-//   { location: { lat: 23.698937, lng: 90.423510 }, weight: 1.5 }, // Jatrabari
-//   { location: { lat: 23.761027, lng: 90.364722 }, weight: 3 }, // Agargaon
-//   { lat: 23.726831, lng: 90.435916 }, // Gandaria
-//   ]
+
     // const heatMap = new HeatmapLayer
     // console.log('heatMap', heatMap)
     //  { location: { lat: 23.780887, lng: 90.279237 }, weight: 0.5 }, // Dhanmondi
@@ -184,48 +160,18 @@ watch(
 )
 
 onMounted(async() => {
-    console.log('firestore database index homepage')
-    await fetchComplain()
+    const auth = sessionStorage.getItem('email');
+    console.log('auth',auth)
+    if(auth){
+        console.log('firestore database index homepage')
+        await fetchComplain()
+    }else{
+        router.push('/login')
+    }
+
 
 })
 
-// const mail = useMail()
-const SOS = async (e) => {
-    try {
-        const serviceId = 'service_b87fh3k';
-        const templateId = 'template_0qb0zsv';
-        const userId = 'dMoTGtwUZ_NLU7dKS';
-
-        // emailjs.sendForm('service_b87fh3k', 'template_0qb0zsv', this.$refs.form, {
-        //   publicKey: 'dMoTGtwUZ_NLU7dKS',
-        // })
-        // .then(
-        //   () => {
-        //     console.log('SUCCESS!');
-        //   },
-        //   (error) => {
-        //     console.log('FAILED...', error.text);
-        //   },
-        // );
-        await emailjs.send(serviceId, templateId, {
-        to_email: 'm.alinkon10@gmail.com',
-        subject: 'Help me',
-        message: 'Location',
-        }, userId);
-        alert(" SOS Alert Send")
-
-        // await emailjs.send(serviceId, templateId, {
-        //   to_email: 'm.alinkon10@gmail.com',
-        //   subject: 'Help me!!',
-        //   message: 'Please protect me',
-        // }, userId);
-
-        // this.message = 'Email sent successfully!';
-      } catch (error) {
-        this.message = 'Error sending email';
-        console.error(error);
-      }
-}
 
 </script>
 <template>
@@ -244,13 +190,6 @@ const SOS = async (e) => {
             <section class="flex justify-center">
             <section class="w-full py-8 flex justify-center">
                 <IndexEmailSend />
-                <!-- <form ref="form" @submit.prevent="SOS">
-                <input type="text" name="hackathon"  class="hidden">
-                <input type="email" name="m.alinkon10@gmail.com"  class="hidden">
-                <textarea name="message" :value="'help me'" class="hidden"></textarea>  -->
-                <!-- <input type="submit" value="Send" class="bg-red-500 text-center w-full flex justify-center py-4"> -->
-                <!-- <UButton type="submit" class="bg-red-500 text-center w-full flex justify-center py-4" @click="SOS">SOS</UButton> -->
-            <!-- </form> -->
             </section>
         </section>
         <section class="w-full py-8">
@@ -268,16 +207,6 @@ const SOS = async (e) => {
         <section>
             <IndexMarkerList :data="heatmapData" />
         </section>
-        <!-- <GoogleMap
-        :api-key="apiKey"
-        :libraries="['visualization']"
-        style="width: 100%; height: 600px"
-        :center="bangladesh"
-        :zoom="13"
-    >
-
-        <HeatmapLayer ref="mapRef" :options="{ data: heatmapData }" />
-    </GoogleMap> -->
     </section>
 </section>
 
