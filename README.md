@@ -21,13 +21,13 @@ Historical data.
 User-provided inputs.
 Helps in planning and proactive safety measures.
 # Technology Stack
-Frontend: Nuxt JS with Tailwind CSS for a responsive and modern UI.
-Backend: VueFire And Flask.
-Database: Firestore.
-AI/ML: Python-based AI model for crime rate predictions and real-time data analysis.
-SOS: Mailtrap
-Map Integration: Mapbox/Google Maps API for rendering the interactive heatmap.
-Installation Guide
+1. Frontend: Nuxt JS with Tailwind CSS for a responsive and modern UI.
+2. Backend: VueFire And Flask.
+3. Database: Firestore.
+4. AI/ML: Python-based AI model for crime rate predictions and real-time data analysis.
+5. SOS: Mailtrap
+Map Integration: Mapbox/Google Maps API for rendering the 
+6. interactive heatmap.
 
 # Installation
 1. Clone the Repository
