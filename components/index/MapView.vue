@@ -203,7 +203,7 @@ onMounted(async() => {
         </section>
     </section>
     <section class="w-full mx-2">
-        <p class="font-bold text-[32px] py-8 text-center">Heat map showing</p>
+        <p class="font-bold text-[32px] py-8 text-center">Interactive Safety Risk Map</p>
         <section>
             <IndexMarkerList :data="heatmapData" />
         </section>
