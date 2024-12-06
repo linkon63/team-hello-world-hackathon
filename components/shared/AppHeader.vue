@@ -16,11 +16,11 @@ const links = [
     icon: 'i-heroicons-chart-bar',
     to: '/ai/prediction'
   }, 
-//   {
-//     label: 'Command Palette',
-//     icon: 'i-heroicons-command-line',
-//     to: '/components/command-palette'
-//   }
+  {
+    label: 'Complain',
+    icon: 'i-heroicons-command-line',
+    to: '/area/complain'
+  }
 ], 
   [{
     label: 'Profile Info',

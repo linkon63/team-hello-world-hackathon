@@ -5,47 +5,9 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from '../../components/config/firestore.js'
 import { collection, getDocs } from "firebase/firestore";
 
-const locations = ref({
-    FCB: {
-        id: 'FCB',
-        headline: 'FC Bayern München',
-        text: 'Bayern München is the most successful soccer club in Germany. In the german Bundesliga their current rank is #1. Add some more text for this item to make it look bigger',
-        lat: 48.21888549557031,
-        lng: 11.625109549171704
-    },
-    SCF: {
-        id: 'SCF',
-        headline: 'SC Freiburg',
-        text: 'SC Freiburg is also a german soccer club from the 1. Bundesliga in Germany. In the german Bundesliga their current rank is #2. Add some more text for this item to make it look bigger',
-        lat: 48.021196964093434,
-        lng: 7.82996300258625
-    },
-    RBL: {
-        id: 'RBL',
-        headline: 'Red Bull Leipzig',
-        text: 'Red Bull Leipzig is a very good soccer club as well. They are sponsered by Red Bull I guess. In the german Bundesliga their current rank is #3. Add some more text for this item to make it look bigger',
-        lat: 51.34762220651972,
-        lng: 12.35519705573161
-    },
-    FCUB: {
-        id: 'FCUB',
-        headline: 'Union Berlin',
-        text: 'This is a soccer club from Berlin. I dont know anything about soccer but here is more text. In the german Bundesliga their current rank is #5. Add some more text for this item to make it look bigger',
-        lat: 52.45755304910101,
-        lng: 13.568600380052235
-    },
-    BVB: {
-        id: 'BVB',
-        headline: 'BVB Borussia Dortmund',
-        text: 'BVB is also pretty good soccer club right? They are colored in yellow and black and I thats all I know. In the german Bundesliga their current rank is #6. Add some more text for this item to make it look bigger',
-        lat: 51.492787217050754,
-        lng: 7.452501674962833
-    }
-});
-
 const apiKey = 'AIzaSyDM_zbLEpF8w2xOdMQzoGfKM-GavUXuhl4'
 
-const sanFrancisco = { lat: 37.774546, lng: -122.433523 }
+const bangladesh = { lat: 23.6850, lng: 90.3563 }
 
 const heatmapData = [
   { location: { lat: 37.782, lng: -122.447 }, weight: 0.5 },
@@ -65,6 +27,12 @@ const heatmapData = [
   { location: { lat: 37.785, lng: -122.435 }, weight: 3 },
 ]
 
+
+const state = reactive({
+    heatmapData : heatmapData
+});
+
+
 const crimeItemsOptions = [
   [{
     label: 'Profile',
@@ -75,52 +43,73 @@ const crimeItemsOptions = [
 //   
 ]
 
-// onMounted(async() => {
-//     console.log('firestore database')
-//     const querySnapshot = await getDocs(collection(db, "todos"));
-//     console.log('firestore database', querySnapshot)
+const crimeType = [
+  { id: 1, name: 'Murder' },
+  { id: 2, name: 'Kidnapping' },
+  { id: 3, name: 'Crime Against Women' },
+  { id: 4, name: 'Crime Against Children' },
+  { id: 5, name: 'Crime Committed by Juveniles' },
+  { id: 6, name: 'Crime Against Senior Citizen' },
+  { id: 7, name: 'Drug Trafficking' },
+  { id: 8, name: 'Theft' },
+  { id: 9, name: 'Rape' },
+  { id: 10, name: 'Robbery' }
+];
 
-//     querySnapshot.forEach((doc) => {
-//     // doc.data() is never undefined for query doc snapshots
-//     console.log(doc.id, " => ", doc.data());
-//     });
+const selected = ref(crimeType[0].id)
 
-// })
+const fetchComplain = async() => {
+    const querySnapshot = await getDocs(collection(db, "hComplain"));
+
+        const complainList = []
+
+        querySnapshot.forEach((doc) => {
+        const obj = { ...doc.data(), id: doc.id }
+        complainList.push(obj)
+        console.log(doc.id, " => ", doc.data());
+        });
+        state.complainList = complainList
+}
+
+onMounted(async() => {
+    console.log('firestore database index homepage')
+    await fetchComplain()
+
+})
 
 </script>
 <template>
-   <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+   <section class="grid grid-cols-1 lg:grid-cols-[20%_70%] gap-8 overflow-hidden">
     <section class="w-full mx-2">
-        <p class="font-bold text-[32px] py-8">Map control Pabel</p>
-        <section class="border w-full">
-            <UDropdown :items="crimeItemsOptions" :popper="{ placement: 'bottom-start' }" class="border w-full border-green-400">
-                <UButton color="white" label="Select Crime" trailing-icon="i-heroicons-chevron-down-20-solid" class="border border-red-500" />
-            </UDropdown>
+        <p class="font-bold text-[32px] py-8">Map control Panel</p>
+        <section class="w-full">
+            <p class="py-1 font-semibold">Select the crime</p>
+            <USelectMenu
+                v-model="selected"
+                :options="crimeType"
+                placeholder="Select crime"
+                value-attribute="id"
+                option-attribute="name"
+            />
+            <section class="flex justify-center">
+            <section class="w-full py-8 flex justify-center">
+                <UButton class="bg-red-500 text-center w-full flex justify-center py-4">SOS</UButton>
+            </section>
+        </section>
         </section>
     </section>
     <section class="w-full mx-2">
-        <p class="font-bold text-[32px] py-8">Heat map showing</p>
+        <p class="font-bold text-[32px] py-8 text-center">Heat map showing</p>
         <GoogleMap
         :api-key="apiKey"
         :libraries="['visualization']"
-        style="width: 100%; height: 500px"
-        :center="sanFrancisco"
+        style="width: 100%; height: 600px"
+        :center="bangladesh"
         :zoom="13"
     >
-        <HeatmapLayer :options="{ data: heatmapData }" />
+        <HeatmapLayer :options="{ data: state?.heatmapData }" />
     </GoogleMap>
     </section>
-    <!-- <section class="w-3/6 mx-2">
-        <p class="font-bold text-[32px] py-8">Normal Map Showing</p>
-        <GoogleMap
-            :api-key="apiKey"
-            style="width: 100%; height: 500px"
-            :center="{ lat: 33.678, lng: -116.243 }"
-            :zoom="15" mapTypeId="terrain"
-            >
-                <Rectangle :options="rectangle" />
-    </GoogleMap>
-    </section> -->
 </section>
 
 </template>
@@ -129,6 +118,6 @@ const crimeItemsOptions = [
 .map {
     position: relative;
     width: 100%;
-    height: 650px;
+    height: 700px;
 }
 </style>
