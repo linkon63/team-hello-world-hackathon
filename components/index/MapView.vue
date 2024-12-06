@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from '../../components/config/firestore.js'
 import { collection, getDocs } from "firebase/firestore";
-
+import emailjs from '@emailjs/browser';
 const apiKey = 'AIzaSyDM_zbLEpF8w2xOdMQzoGfKM-GavUXuhl4'
 
 const bangladesh = { lat: 23.6850, lng: 90.3563 }
@@ -189,6 +189,44 @@ onMounted(async() => {
 
 })
 
+// const mail = useMail()
+const SOS = async (e) => {
+    try {
+        const serviceId = 'service_b87fh3k';
+        const templateId = 'template_0qb0zsv';
+        const userId = 'dMoTGtwUZ_NLU7dKS';
+
+        // emailjs.sendForm('service_b87fh3k', 'template_0qb0zsv', this.$refs.form, {
+        //   publicKey: 'dMoTGtwUZ_NLU7dKS',
+        // })
+        // .then(
+        //   () => {
+        //     console.log('SUCCESS!');
+        //   },
+        //   (error) => {
+        //     console.log('FAILED...', error.text);
+        //   },
+        // );
+        await emailjs.send(serviceId, templateId, {
+        to_email: 'm.alinkon10@gmail.com',
+        subject: 'Help me',
+        message: 'Location',
+        }, userId);
+        alert(" SOS Alert Send")
+
+        // await emailjs.send(serviceId, templateId, {
+        //   to_email: 'm.alinkon10@gmail.com',
+        //   subject: 'Help me!!',
+        //   message: 'Please protect me',
+        // }, userId);
+
+        // this.message = 'Email sent successfully!';
+      } catch (error) {
+        this.message = 'Error sending email';
+        console.error(error);
+      }
+}
+
 </script>
 <template>
    <section class="grid grid-cols-1 lg:grid-cols-[20%_70%] gap-8 overflow-hidden">
@@ -205,7 +243,14 @@ onMounted(async() => {
             />
             <section class="flex justify-center">
             <section class="w-full py-8 flex justify-center">
-                <UButton class="bg-red-500 text-center w-full flex justify-center py-4">SOS</UButton>
+                <IndexEmailSend />
+                <!-- <form ref="form" @submit.prevent="SOS">
+                <input type="text" name="hackathon"  class="hidden">
+                <input type="email" name="m.alinkon10@gmail.com"  class="hidden">
+                <textarea name="message" :value="'help me'" class="hidden"></textarea>  -->
+                <!-- <input type="submit" value="Send" class="bg-red-500 text-center w-full flex justify-center py-4"> -->
+                <!-- <UButton type="submit" class="bg-red-500 text-center w-full flex justify-center py-4" @click="SOS">SOS</UButton> -->
+            <!-- </form> -->
             </section>
         </section>
         <section class="w-full py-8">
